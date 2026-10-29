@@ -1,0 +1,40 @@
+{
+  "title": "Rețele Electrice (McG)",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Conectare la Rețele Electrice",
+        "description": "Integrarea folosește direct contul portalului și nu necesită licență.",
+        "data": {
+          "email": "Email",
+          "password": "Parolă"
+        }
+      },
+      "select_pod": {
+        "title": "Selectare POD",
+        "description": "Alege punctul de consum pe care vrei să îl adaugi.",
+        "data": {
+          "pod": "POD"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Nu se poate contacta portalul Rețele Electrice",
+      "invalid_auth": "Email sau parolă incorectă",
+      "invalid_pod": "POD-ul selectat nu mai este disponibil"
+    },
+    "abort": {
+      "already_configured": "Acest cont și POD sunt deja configurate"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opțiuni",
+        "data": {
+          "scan_interval": "Interval de actualizare (secunde)"
+        }
+      }
+    }
+  }
+}
