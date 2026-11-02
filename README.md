@@ -55,9 +55,14 @@ Acest proiect este independent și nu este afiliat cu Rețele Electrice România
 
 ## Versiuni
 
+- **0.2.5** — cere reautentificarea când portalul respinge datele de conectare;
+  validează noua parolă și păstrează POD-ul configurat. Limitează atributele
+  senzorilor POD/furnizor la câmpuri nepersonale explicite.
+
 - **0.2.4** — adaugă traducerea engleză de rezervă (`translations/en.json`)
   pentru afișarea corectă a configurării în toate limbile Home Assistant.
 
 - **0.2.3** — parametri Visualforce corectați pentru furnizor, arhivă,
   întreruperi și Smart Meter; integrarea rămâne activă când portalul oferă
   datele POD prin Aura, dar un serviciu secundar este temporar indisponibil.
+

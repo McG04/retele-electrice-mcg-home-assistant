@@ -1,12 +1,14 @@
 {
   "domain": "retele_electrice_local",
   "name": "Rețele Electrice (McG)",
-  "codeowners": ["@McG04"],
+  "codeowners": [
+    "@McG04"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/McG04/retele-electrice-mcg-home-assistant",
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/McG04/retele-electrice-mcg-home-assistant/issues",
   "requirements": [],
-  "version": "0.2.4"
+  "version": "0.2.5"
 }

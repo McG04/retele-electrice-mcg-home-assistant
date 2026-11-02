@@ -16,6 +16,14 @@
         "data": {
           "pod": "POD"
         }
+      },
+      "reauth_confirm": {
+        "title": "Reautentificare Rețele Electrice",
+        "description": "Introdu datele de conectare pentru același cont. POD-ul configurat și istoricul sunt păstrate.",
+        "data": {
+          "email": "Email",
+          "password": "Parolă"
+        }
       }
     },
     "error": {
@@ -24,7 +32,9 @@
       "invalid_pod": "POD-ul selectat nu mai este disponibil"
     },
     "abort": {
-      "already_configured": "Acest cont și POD sunt deja configurate"
+      "already_configured": "Acest cont și POD sunt deja configurate",
+      "reauth_successful": "Datele de conectare au fost actualizate",
+      "wrong_account": "Folosește același cont ca în integrarea existentă"
     }
   },
   "options": {
