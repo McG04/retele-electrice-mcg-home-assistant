@@ -309,6 +309,8 @@ class ReteleElectriceApi:
             )
             if self._pod_record:
                 data["pod_details"] = dict(self._pod_record)
+        except ReteleElectriceAuthError:
+            raise
         except ReteleElectriceError as err:
             failures["pod_list"] = str(err)
 
@@ -320,6 +322,8 @@ class ReteleElectriceApi:
             if isinstance(account, dict):
                 self._account_info = account
                 data["account_info"] = account
+        except ReteleElectriceAuthError:
+            raise
         except ReteleElectriceError as err:
             failures["account_info"] = str(err)
 
@@ -336,6 +340,8 @@ class ReteleElectriceApi:
                 merged = dict(data.get("pod_details") or {})
                 merged.update(details)
                 data["pod_details"] = merged
+        except ReteleElectriceAuthError:
+            raise
         except ReteleElectriceError as err:
             failures["pod_aura_details"] = str(err)
 
@@ -374,6 +380,8 @@ class ReteleElectriceApi:
                 smart_meter = await self.async_fetch_smart_meter()
                 if smart_meter:
                     data["smart_meter"] = smart_meter
+            except ReteleElectriceAuthError:
+                raise
             except ReteleElectriceError as err:
                 failures["smart_meter"] = str(err)
                 _LOGGER.debug("Smart Meter nu este disponibil: %s", err)
@@ -630,3 +638,4 @@ class ReteleElectriceApi:
                 if isinstance(value, list):
                     return {"items": value}
         raise ReteleElectriceProtocolError("Răspunsul serviciului nu conține JSON")
+

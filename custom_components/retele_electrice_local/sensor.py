@@ -42,6 +42,18 @@ def _clean_meta(value: Any) -> Any:
     return value
 
 
+def _public_pod_attributes(data: dict, keys: tuple[str, ...]) -> dict[str, Any]:
+    """Expose only known non-personal scalar fields, never raw portal records."""
+    details = data.get("pod_details")
+    if not isinstance(details, dict):
+        return {}
+    return {
+        key: details[key]
+        for key in keys
+        if key in details and isinstance(details[key], (str, bool, int, float))
+    }
+
+
 def _readings(data: dict) -> list[dict]:
     archive = data.get("archive") or {}
     items = archive.get("XML_Readings") or archive.get("readings") or []
@@ -103,17 +115,16 @@ SENSORS = (
         icon="mdi:file-document-outline",
         value_fn=lambda data: (data.get("pod_details") or {}).get("activ")
         or "Activ",
-        attrs_fn=lambda data: _clean_meta(data.get("pod_details") or {}),
+        attrs_fn=lambda data: _public_pod_attributes(data, ("activ",)),
         exists_fn=lambda data: bool(data.get("pod_details")),
     ),
     ReteleSensorDescription(
         key="date_furnizor",
         name="Date furnizor",
         icon="mdi:office-building",
-        value_fn=lambda data: (data.get("pod_details") or {}).get("cui")
-        or (data.get("pod_details") or {}).get("furnizor")
+        value_fn=lambda data: _public_pod_attributes(data, ("furnizor",)).get("furnizor")
         or "Disponibil",
-        attrs_fn=lambda data: _clean_meta(data.get("pod_details") or {}),
+        attrs_fn=lambda data: _public_pod_attributes(data, ("furnizor",)),
         exists_fn=lambda data: bool(data.get("pod_details")),
     ),
     ReteleSensorDescription(
@@ -336,3 +347,4 @@ class ReteleAnnualSensor(ReteleElectriceEntity, SensorEntity):
             if value is not None:
                 values[raw_date] = value
         return values
+

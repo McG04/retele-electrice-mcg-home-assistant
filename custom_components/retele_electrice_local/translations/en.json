@@ -16,6 +16,14 @@
         "data": {
           "pod": "POD"
         }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate Rețele Electrice",
+        "description": "Enter the credentials for the same account. The configured POD and history are kept.",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
       }
     },
     "error": {
@@ -24,7 +32,9 @@
       "invalid_pod": "The selected POD is no longer available"
     },
     "abort": {
-      "already_configured": "This account and POD are already configured"
+      "already_configured": "This account and POD are already configured",
+      "reauth_successful": "Credentials updated successfully",
+      "wrong_account": "Use the same account as the existing integration"
     }
   },
   "options": {

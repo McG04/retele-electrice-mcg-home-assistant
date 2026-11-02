@@ -6,9 +6,10 @@ from datetime import timedelta
 import logging
 
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import ReteleElectriceError
+from .api import ReteleElectriceAuthError, ReteleElectriceError
 from .const import NAME
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,5 +30,8 @@ class ReteleElectriceCoordinator(DataUpdateCoordinator[dict]):
     async def _async_update_data(self) -> dict:
         try:
             return await self.api.async_fetch_all()
+        except ReteleElectriceAuthError as err:
+            raise ConfigEntryAuthFailed("Portal authentication failed") from err
         except ReteleElectriceError as err:
             raise UpdateFailed(str(err)) from err
+

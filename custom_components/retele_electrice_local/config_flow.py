@@ -112,6 +112,61 @@ class ReteleElectriceLocalConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
+    async def async_step_reauth(self, entry_data):
+        """Ask for replacement credentials for an existing entry."""
+        return await self.async_step_reauth_confirm()
+
+    async def async_step_reauth_confirm(self, user_input=None):
+        """Validate credentials and retain the existing POD and entry."""
+        entry = self._get_reauth_entry()
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            email = user_input[CONF_EMAIL].strip().lower()
+            password = user_input[CONF_PASSWORD]
+            pod = entry.data[CONF_POD]
+            session = aiohttp.ClientSession(
+                cookie_jar=aiohttp.CookieJar(unsafe=True),
+                headers=BROWSER_HEADERS,
+            )
+            try:
+                api = ReteleElectriceApi(
+                    session, email=email, password=password, pod=pod
+                )
+                await api.async_test_credentials()
+                pods = await api.async_get_pods()
+            except ReteleElectriceAuthError:
+                errors["base"] = "invalid_auth"
+            except ReteleElectriceError:
+                errors["base"] = "cannot_connect"
+            finally:
+                await session.close()
+
+            if not errors:
+                await self.async_set_unique_id(f"{email}:{pod}")
+                self._abort_if_unique_id_mismatch(reason="wrong_account")
+                if pod not in self._pod_options(pods):
+                    errors["base"] = "invalid_pod"
+                else:
+                    return self.async_update_reload_and_abort(
+                        entry,
+                        data_updates={CONF_EMAIL: email, CONF_PASSWORD: password},
+                    )
+
+        return self.async_show_form(
+            step_id="reauth_confirm",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_EMAIL, default=entry.data[CONF_EMAIL]): str,
+                    vol.Required(CONF_PASSWORD): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            type=selector.TextSelectorType.PASSWORD
+                        )
+                    ),
+                }
+            ),
+            errors=errors,
+        )
+
     @staticmethod
     def _pod_options(pods: list[dict]) -> dict[str, str]:
         options: dict[str, str] = {}
@@ -159,3 +214,4 @@ class ReteleElectriceOptionsFlow(config_entries.OptionsFlow):
                 }
             ),
         )
+
